@@ -4,6 +4,7 @@
 from typing import List
 import logging
 import re
+import mysql.connector
 
 PII_FIELDS = ('name', 'email', 'password', 'ssn', 'phone')
 
