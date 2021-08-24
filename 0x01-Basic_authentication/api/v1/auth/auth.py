@@ -12,14 +12,14 @@ class Auth:
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """ Checks if API routes require authentication """
-        if path is None or excluded_paths is None or len(excluded_paths) == 0:
+        if path is None or not excluded_paths:
             return True
-        if path[-1] != '/':
-            path += '/'
-        if path in excluded_paths:
-            return False
-        else:
-            return True
+        for i in excluded_paths:
+            if i.endswith('*') and path.startswith(i[:-1]):
+                return False
+            elif i in {path, path + '/'}:
+                return False
+        return True
 
     def authorization_header(self, request=None) -> str:
         """ Checks if Authorization request header is present
