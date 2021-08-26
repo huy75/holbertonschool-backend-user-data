@@ -37,9 +37,10 @@ def request_filter() -> None:
         if auth.require_auth(request.path, excluded_paths):
             if auth.authorization_header(request) is None:
                 abort(401)
+            temp = auth.current_user(request)
             if auth.current_user(request) is None:
                 abort(403)
-            request.current_user = auth.current_user(request)
+            request.current_user = temp
 
 @app.errorhandler(404)
 def not_found(error) -> str:
