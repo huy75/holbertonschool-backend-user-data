@@ -30,17 +30,23 @@ def request_filter() -> None:
     excluded_paths = [
         '/api/v1/status/',
         '/api/v1/unauthorized/',
-        '/api/v1/forbidden/'
+        '/api/v1/forbidden/',
+        '/api/v1/auth_session/login/'
         ]
 
     if auth:
-        if auth.require_auth(request.path, excluded_paths):
-            if auth.authorization_header(request) is None:
+        if auth.require_auth(request.path, request_path_list):
+            if auth.authorization_header(
+                    request) is None and auth.session_cookie(request) is None:
                 abort(401)
-            temp = auth.current_user(request)
+            request.current_user = auth.current_user(request)
+
             if auth.current_user(request) is None:
                 abort(403)
-            request.current_user = temp
+
+            if request.current_user is None:
+                abort(403)
+
 
 @app.errorhandler(404)
 def not_found(error) -> str:
