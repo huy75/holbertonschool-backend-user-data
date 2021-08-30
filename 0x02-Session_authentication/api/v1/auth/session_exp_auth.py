@@ -14,10 +14,10 @@ class SessionExpAuth(SessionAuth):
     def __init__(self):
         """ Override init method """
 
-        self.session_duration = 0
-
-        if int(getenv('SESSION_DURATION')):
+        try:
             self.session_duration = int(getenv('SESSION_DURATION'))
+        except Exception:
+            self.session_duration = 0
 
     def create_session(self, user_id: str = None) -> str:
         """ Creates a Session ID for user_id """
