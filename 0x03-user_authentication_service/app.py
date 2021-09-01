@@ -29,27 +29,22 @@ def new_user() -> str:
     """
 
     # Get data from form request, change to request.get_json() for body
-    form_data = request.form
+    email = request.form.get("email")
+    password = request.form.get("password")
 
-    if "email" not in form_data:
-        return jsonify({"message": "email required"}), 400
-    elif "password" not in form_data:
-        return jsonify({"message": "password required"}), 400
-    else:
+    email = form_data["email"]
+    pswd = form_data["password"]
 
-        email = form_data["email"]
-        pswd = form_data["password"]
-
-        try:
-            new_user = AUTH.register_user(email, pswd)
-            return jsonify({
-                "email": new_user.email,
-                "message": "user created"
-            }), 201
-        except ValueError:
-            return jsonify({
-                "message": "user already registered with this email"
-                }), 400
+    try:
+        new_user = AUTH.register_user(email, pswd)
+        return jsonify({
+            "email": new_user.email,
+            "message": "user created"
+        })
+    except ValueError:
+        return jsonify({
+            "message": "email already registered"
+            }), 400
 
 
 if __name__ == "__main__":
