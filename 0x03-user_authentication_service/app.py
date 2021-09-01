@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """ Route module for the API """
+
 from flask import Flask, jsonify, request
+from auth import Auth
 
 app = Flask(__name__)
 
