@@ -57,14 +57,13 @@ def login() -> str:
     password = request.form.get("password")
     valid_user = AUTH.valid_login(email, password)
 
-    if valid_user:
-        session_id = AUTH.create_session(email)
-        message = {"email": email, "message": "logged in"}
-        response = jsonify(message)
-        response.set_cookie("session_id", session_id)
-        return response
-    else:
+    if not valid_user:
         abort(401)
+    session_id = AUTH.create_session(email)
+    message = {"email": email, "message": "logged in"}
+    response = jsonify(message)
+    response.set_cookie("session_id", session_id)
+    return response
 
 
 if __name__ == "__main__":
