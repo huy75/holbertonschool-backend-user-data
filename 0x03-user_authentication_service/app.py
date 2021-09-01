@@ -2,12 +2,12 @@
 """ Route module for the API """
 
 from flask import Flask, jsonify, request
+from sqlalchemy.orm.exc import NoResultFound
 from auth import Auth
 
 
-AUTH = Auth()
-
 app = Flask(__name__)
+AUTH = Auth()
 
 
 @app.route('/', methods=['GET'], strict_slashes=False)
@@ -33,12 +33,13 @@ def new_user() -> str:
     password = request.form.get("password")
 
     try:
-        new_user = AUTH.register_user(email, pswd)
-        return jsonify({
-            "email": new_user.email,
-            "message": "user created"
-        })
-    except Exception:
+        new_user = AUTH.register_user(email, password)
+        if new_user is not None:
+            return jsonify({
+                "email": new_user.email,
+                "message": "user created"
+            })
+    except ValueRrror:
         return jsonify({
             "message": "email already registered"
             }), 400
