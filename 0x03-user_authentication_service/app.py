@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ Route module for the API """
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request,  abort, redirect, url_for
 from sqlalchemy.orm.exc import NoResultFound
 from auth import Auth
 
@@ -64,6 +64,23 @@ def login() -> str:
     response = jsonify(message)
     response.set_cookie("session_id", session_id)
     return response
+
+
+@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+def logout() -> None:
+    """ DELETE /sessions
+    Destroys session by finding session_id (key in cookie)
+    Return:
+      - Redirects user to status route (GET /)
+    """
+    session_id = request.cookies.get('session_id')
+    if session_id:
+        user = AUTH.get_user_from_session_id(session_id)
+        if user:
+            AUTH.destroy_session(user.id)
+            return redirect(url_for('index'))
+    else:
+        abort(403)
 
 
 if __name__ == "__main__":
