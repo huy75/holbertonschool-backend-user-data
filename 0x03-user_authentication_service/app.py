@@ -45,5 +45,28 @@ def new_user() -> str:
             }), 400
 
 
+@app.route('/sessions', methods=['POST'], strict_slashes=False)
+def login() -> str:
+    """ POST /sessions
+    Creates new session for user, stores as cookie
+    Email and pswd fields in x-www-form-urlencoded request
+    Return:
+      - JSON payload
+    """
+    email = request.form.get("email")
+    password = request.form.get("password")
+    valid_user = AUTH.valid_login(email, password)
+
+    if valid_user:
+        session_id = AUTH.create_session(email)
+        if session_id is not None:
+            message = {"email": email, "message": "logged in"}
+            response = jsonify(message)
+            response.set_cookie("session_id", session_id)
+            return response
+    else:
+        abort(401)
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
