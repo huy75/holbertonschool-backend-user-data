@@ -59,11 +59,10 @@ def login() -> str:
 
     if valid_user:
         session_id = AUTH.create_session(email)
-        if session_id is not None:
-            message = {"email": email, "message": "logged in"}
-            response = jsonify(message)
-            response.set_cookie("session_id", session_id)
-            return response
+        message = {"email": email, "message": "logged in"}
+        response = jsonify(message)
+        response.set_cookie("session_id", session_id)
+        return response
     else:
         abort(401)
 
