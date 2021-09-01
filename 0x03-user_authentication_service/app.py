@@ -89,10 +89,12 @@ def profile() -> str:
         - 403 if session ID is invalid
     """
     user_cookie = request.cookies.get("session_id", None)
-    user = AUTH.get_user_from_session_id(user_cookie)
-    if user_cookie is None or user is None:
+    if user_cookie is None:
         abort(403)
-    return jsonify({"email": user}), 200
+    user = AUTH.get_user_from_session_id(user_cookie)
+    if user is None:
+        abort(403)
+    return jsonify({"email": user.email}), 200
 
 
 if __name__ == "__main__":
