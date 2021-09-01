@@ -54,7 +54,7 @@ class DB:
             'reset_token'
             ]
 
-        for arg in kwargs:
+        for arg in kwargs.keys():
             if arg not in users_columns:
                 raise InvalidRequestError
 
@@ -63,5 +63,4 @@ class DB:
 
         if search_user:
             return search_user
-        else:
-            raise NoResultFound
+        raise NoResultFound
