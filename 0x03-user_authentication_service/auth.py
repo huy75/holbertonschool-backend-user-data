@@ -2,7 +2,8 @@
 """ Authentication
 """
 from bcrypt import hashpw, gensalt
-
+from db import DB
+from user import User
 
 def _hash_password(password: str) -> str:
     """ Takes in string arg, converts to unicode
