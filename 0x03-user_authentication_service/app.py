@@ -106,14 +106,15 @@ def get_reset_password_token() -> str:
             - 403 if email not registered
     """
     user_request = request.form
-    user_email = user_request.get('email', '')
+    user_email = user_request.get('email')
     is_registered = AUTH.create_session(user_email)
 
     if not is_registered:
         abort(403)
 
     token = AUTH.get_reset_password_token(user_email)
-    return jsonify({"email": user_email, "reset_token": token})
+    message = {"email": user_email, "reset_token": token}
+    return jsonify(message)
 
 
 if __name__ == "__main__":
