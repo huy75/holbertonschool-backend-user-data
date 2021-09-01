@@ -32,9 +32,6 @@ def new_user() -> str:
     email = request.form.get("email")
     password = request.form.get("password")
 
-    email = form_data["email"]
-    pswd = form_data["password"]
-
     try:
         new_user = AUTH.register_user(email, pswd)
         return jsonify({
